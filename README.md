@@ -21,7 +21,7 @@ Add it in your build.gradle(Module)
 ```java
 dependencies {
 	...
-	compile 'com.github.deluakin:Hobtel-Payment-Android:v1.0'
+	compile 'com.github.deluakin:Hubtel-Payment-Android:v1.0'
 }
 ```
 
@@ -39,7 +39,7 @@ __Add a dependency using Maven:__
 ```java
 <dependency>
 	<groupId>com.github.deluakin</groupId>
-	<artifactId>>Hobtel-Payment-Android</artifactId>
+	<artifactId>>Hubtel-Payment-Android</artifactId>
 	<version>v2.1</version>
 </dependency>
 ```
