@@ -40,7 +40,7 @@ __Add a dependency using Maven:__
 <dependency>
 	<groupId>com.github.deluakin</groupId>
 	<artifactId>>Hubtel-Payment-Android</artifactId>
-	<version>v2.1</version>
+	<version>v1.0</version>
 </dependency>
 ```
 
