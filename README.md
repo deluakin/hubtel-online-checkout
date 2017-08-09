@@ -1,6 +1,6 @@
 # Description
 __Hubtel Payment__ android library allows you to easily integrate payment gateway into your android app and start accepting payments from within your android app.
-The gateway supports the following Mobile Wallets & Bank Cards. To signup for a merchant account visit https://unity.hubtel.com/account/signup. 
+The gateway supports Mobile Wallets(MTN, Airtel, Tigo, Vodafone) & Bank Cards payment. To signup for a merchant account visit https://unity.hubtel.com/account/signup. 
 
 
 # Download
