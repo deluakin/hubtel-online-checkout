@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">HubtelPayment</string>
+
+    <string name="mpower_masterkey"></string>
+    <string name="mpower_privatekey"></string>
+
+</resources>
