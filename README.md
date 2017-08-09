@@ -1,15 +1,6 @@
 # Description
-MPower payment android library allow you to easily integrate mpower payment gateway into your android app and start accepting payments from inside your android app.
-MPowerPayments supports the following payment methods Mobile Wallets, Credit & Debit Cards, FCB Speedbank Vouchers & Bank Transfers. 
-To signup for a merchant account visit https://app.mpowerpayments.com/signup. 
-__Note:__ This library is meant to be used by merchants in Ghana.
-
-
-With this library you will be able to accept the following payment methods within your app:
-
-* __Visa__
-* __MasterCard__
-* __Mobile Wallet__
+__Hubtel Payment__ android library allows you to easily integrate payment gateway into your android app and start accepting payments from within your android app.
+The gateway supports the following Mobile Wallets & Bank Cards. To signup for a merchant account visit https://unity.hubtel.com/account/signup. 
 
 
 # Download
@@ -30,7 +21,7 @@ Add it in your build.gradle(Module)
 ```java
 dependencies {
 	...
-	compile 'com.github.deluakin:mpower-payment-android:v2.1'
+	compile 'com.github.deluakin:Hobtel-Payment-Android:v1.0'
 }
 ```
 
@@ -48,7 +39,7 @@ __Add a dependency using Maven:__
 ```java
 <dependency>
 	<groupId>com.github.deluakin</groupId>
-	<artifactId>mpower-payment-android</artifactId>
+	<artifactId>>Hobtel-Payment-Android</artifactId>
 	<version>v2.1</version>
 </dependency>
 ```
