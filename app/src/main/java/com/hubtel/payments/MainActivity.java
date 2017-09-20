@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             paymentstatus.setText("");
             SessionConfiguration sessionConfiguration = new SessionConfiguration()
-                    .Builder().setClientId("igeirlub")
-                    .setSecretKey("jjksrpzl")
+                    .Builder().setClientId("CLIENT-ID")
+                    .setSecretKey("SECRET-KEY")
                     .setEnvironment(Environment.LIVE_MODE)
                     .build();
             HubtelCheckout hubtelPayments = new HubtelCheckout(sessionConfiguration);
