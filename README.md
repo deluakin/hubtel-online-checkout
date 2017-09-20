@@ -79,8 +79,8 @@ catch (HubtelPaymentException e) {
 
 # Note
 You can set an endpoint url which the payment status and token can be posted(GET) to after payment has been completed.
-Hubtel will append "?token=INVOICE_TOKEN&status=PAYMENT_STATUS" to your URL. 
-The __status__ would either be pending, cancelled or completed depending on whether or not the customer has made payment for the transaction.
+Hubtel will append "?token=TOKEN&status=STATUS" to your URL. 
+The __STATUS__ would either be pending, cancelled or completed depending on whether or not the customer has made payment for the transaction.
 
 ```java
 SessionConfiguration sessionConfiguration = new SessionConfiguration()
