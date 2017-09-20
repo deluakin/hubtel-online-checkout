@@ -1,4 +1,4 @@
-package com.smsgh.hubtelpayment.Interfaces;
+package com.hubtel.payments.Interfaces;
 
 /**
  * Created by DELU on 7/23/2016.

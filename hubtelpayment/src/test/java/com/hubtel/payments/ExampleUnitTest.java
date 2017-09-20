@@ -1,4 +1,4 @@
-package com.akindelu.hubtelpayment;
+package com.hubtel.payments;
 
 import org.junit.Test;
 

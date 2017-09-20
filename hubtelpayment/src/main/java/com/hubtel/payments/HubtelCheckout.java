@@ -1,4 +1,4 @@
-package com.smsgh.hubtelpayment;
+package com.hubtel.payments;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -11,11 +11,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.smsgh.hubtelpayment.Class.HTTPRequest;
-import com.smsgh.hubtelpayment.Exception.MPowerPaymentException;
-import com.smsgh.hubtelpayment.Class.PaymentItem;
-import com.smsgh.hubtelpayment.Interfaces.HttpDoneListener;
-import com.smsgh.hubtelpayment.Interfaces.OnPaymentResponse;
+import com.hubtel.payments.Class.Environment;
+import com.hubtel.payments.Class.HTTPRequest;
+import com.hubtel.payments.Exception.HubtelPaymentException;
+import com.hubtel.payments.Class.PaymentItem;
+import com.hubtel.payments.Interfaces.HttpDoneListener;
+import com.hubtel.payments.Interfaces.OnPaymentResponse;
 
 import org.json.JSONObject;
 
@@ -29,7 +30,7 @@ import java.util.List;
  */
 
 
-public class MpowerPayments {
+public class HubtelCheckout {
     private double amount = 0.00;
     private String description = "";
     private SessionConfiguration config;
@@ -45,7 +46,7 @@ public class MpowerPayments {
      *
      * @param configuration
      */
-    public MpowerPayments(SessionConfiguration configuration){
+    public HubtelCheckout(SessionConfiguration configuration){
         this.config = configuration;
     }
 
@@ -54,7 +55,7 @@ public class MpowerPayments {
      * @param configuration
      * @param paymentItemList
      */
-    public MpowerPayments(SessionConfiguration configuration, List<PaymentItem> paymentItemList){
+    public HubtelCheckout(SessionConfiguration configuration, List<PaymentItem> paymentItemList){
         this.config = configuration;
         this.paymentItemList = paymentItemList;
     }
@@ -63,12 +64,12 @@ public class MpowerPayments {
      *
      * @param p
      */
-    public MpowerPayments addPaymentItem(PaymentItem p){
+    public HubtelCheckout addPaymentItem(PaymentItem p){
         paymentItemList.add(p);
         return this;
     }
 
-    public MpowerPayments setPaymentDetails(double amount, String description){
+    public HubtelCheckout setPaymentDetails(double amount, String description){
         this.amount = amount;
         this.description = description;
         return this;
@@ -77,16 +78,21 @@ public class MpowerPayments {
     /**
      *
      * @param context
-     * @throws MPowerPaymentException
+     * @throws HubtelPaymentException
      */
-    public void Pay(Context context) throws MPowerPaymentException{
+    public void Pay(Context context) throws HubtelPaymentException {
         this.context = context;
+
+        if(config.getEnvironment() == Environment.TEST_MODE){
+            throw new HubtelPaymentException("Test environment is not supported, switch to LIVE_MODE.");
+        }
+
         if(config.posturl.trim().length() == 0){
-            throw new MPowerPaymentException("Make sure the build() method of the SessionConfiguration class is called");
+            throw new HubtelPaymentException("Make sure the build() method of the SessionConfiguration class is called");
         }
 
         if(config.geturl.trim().length() == 0){
-            throw new MPowerPaymentException("Make sure the build() method of the SessionConfiguration class is called");
+            throw new HubtelPaymentException("Make sure the build() method of the SessionConfiguration class is called");
         }
 
 
@@ -100,7 +106,7 @@ public class MpowerPayments {
 
         HTTPRequest r = new HTTPRequest(context, new HttpDoneListener() {
             @Override
-            public void onRequestCompleted(String message) throws MPowerPaymentException {
+            public void onRequestCompleted(String message) throws HubtelPaymentException {
                 ContinuePayment(message);
             }
         });
@@ -114,7 +120,7 @@ public class MpowerPayments {
         try {
             r.execute(params);
         } catch (Exception e) {
-            throw new MPowerPaymentException(e.getMessage());
+            throw new HubtelPaymentException(e.getMessage());
         }
     }
 
@@ -126,11 +132,11 @@ public class MpowerPayments {
         this.paymentResponse = paymentResponse;
     }
 
-    private void SendResponseToEndPoint(String endpointurl) throws MPowerPaymentException{
+    private void SendResponseToEndPoint(String endpointurl) throws HubtelPaymentException {
         try {
             HTTPRequest r = new HTTPRequest(context, new HttpDoneListener() {
                 @Override
-                public void onRequestCompleted(String message) throws MPowerPaymentException {
+                public void onRequestCompleted(String message) throws HubtelPaymentException {
 
                 }
             });
@@ -142,11 +148,11 @@ public class MpowerPayments {
 
             r.execute(params);
         } catch (Exception e) {
-            throw new MPowerPaymentException(e.getMessage());
+            throw new HubtelPaymentException(e.getMessage());
         }
     }
 
-    private void CompletePaymentStatusCheck(String message, String token) throws MPowerPaymentException{
+    private void CompletePaymentStatusCheck(String message, String token) throws HubtelPaymentException {
         try {
             d.dismiss();
             JSONObject jsonObject = new JSONObject(message);
@@ -180,7 +186,7 @@ public class MpowerPayments {
 
             }
         }catch (Exception ex){
-            throw new MPowerPaymentException(ex.getMessage());
+            throw new HubtelPaymentException(ex.getMessage());
         }
     }
 
@@ -231,12 +237,12 @@ public class MpowerPayments {
         return data;
     }
 
-    private void CompletePaymentTransaction(final String token) throws MPowerPaymentException {
+    private void CompletePaymentTransaction(final String token) throws HubtelPaymentException {
         //get transaction status from the mpower api
         try {
             HTTPRequest r = new HTTPRequest(context, new HttpDoneListener() {
                 @Override
-                public void onRequestCompleted(String message) throws MPowerPaymentException {
+                public void onRequestCompleted(String message) throws HubtelPaymentException {
                     CompletePaymentStatusCheck(message, token);
                 }
             });
@@ -250,7 +256,7 @@ public class MpowerPayments {
 
             r.execute(params);
         } catch (Exception e) {
-            throw new MPowerPaymentException(e.getMessage());
+            throw new HubtelPaymentException(e.getMessage());
         }
     }
 
@@ -258,7 +264,7 @@ public class MpowerPayments {
         this.paymentResponse.onCancelled(token);
     }
 
-    private String getQueryStringPart(String key, String str_url) throws MPowerPaymentException {
+    private String getQueryStringPart(String key, String str_url) throws HubtelPaymentException {
         try {
             URI uri = new URI(str_url);
             String[] query_data = uri.getQuery().split("&");
@@ -269,7 +275,7 @@ public class MpowerPayments {
                 }
             }
         }catch (Exception ex){
-            throw new MPowerPaymentException(ex.getMessage());
+            throw new HubtelPaymentException(ex.getMessage());
         }
         return "";
     }
@@ -282,7 +288,7 @@ public class MpowerPayments {
         return appname;
     }
 
-    private void ContinuePayment(String message) throws MPowerPaymentException{
+    private void ContinuePayment(String message) throws HubtelPaymentException {
         try{
             JSONObject jsonObject = new JSONObject(message);
             if(jsonObject.get("response_code") != null && jsonObject.get("response_code").toString().equalsIgnoreCase("00")){
@@ -308,7 +314,7 @@ public class MpowerPayments {
                             try {
                                 String token = getQueryStringPart("token", web_url);
                                 CompletePaymentTransaction(token);
-                            } catch (MPowerPaymentException e) {
+                            } catch (HubtelPaymentException e) {
                                 e.printStackTrace();
                             }
                             return;
@@ -327,7 +333,7 @@ public class MpowerPayments {
                                     token = getQueryStringPart("token", web_url);
                                 }
                                 UserCancelledTransaction(token);
-                            } catch (MPowerPaymentException e) {
+                            } catch (HubtelPaymentException e) {
                                 e.printStackTrace();
                             }
                             return;
@@ -347,8 +353,8 @@ public class MpowerPayments {
                     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                         d.dismiss();
                         try {
-                            throw new MPowerPaymentException("Oh no! " + description);
-                        } catch (MPowerPaymentException e) {
+                            throw new HubtelPaymentException("Oh no! " + description);
+                        } catch (HubtelPaymentException e) {
                             e.printStackTrace();
                         }
                     }
@@ -356,11 +362,11 @@ public class MpowerPayments {
                 webview.loadUrl(url);
             }else{
                 d.dismiss();
-                throw new MPowerPaymentException(jsonObject.get("response_text").toString());
+                throw new HubtelPaymentException(jsonObject.get("response_text").toString());
             }
         }catch (Exception ex){
             d.dismiss();
-            throw new MPowerPaymentException(ex.getMessage());
+            throw new HubtelPaymentException(ex.getMessage());
         }
     }
 

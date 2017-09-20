@@ -1,7 +1,8 @@
-package com.smsgh.hubtelpayment;
+package com.hubtel.payments;
 
-import com.smsgh.hubtelpayment.Exception.MPowerPaymentException;
-import com.smsgh.hubtelpayment.Class.Environment;
+import com.hubtel.payments.Class.Environment;
+import com.hubtel.payments.Exception.HubtelPaymentException;
+
 import java.security.MessageDigest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,6 +54,10 @@ public class SessionConfiguration {
         return clientid;
     }
 
+    protected int getEnvironment(){
+        return (mode == Environment.LIVE_MODE) ? Environment.LIVE_MODE : Environment.TEST_MODE;
+    }
+
     public SessionConfiguration Builder(){
         this.clientid = "";
         this.secretkey = "";
@@ -79,21 +84,28 @@ public class SessionConfiguration {
     }
 
     public SessionConfiguration setEnvironment(int environment){
+        if(environment == Environment.TEST_MODE){
+            try {
+                throw new HubtelPaymentException("Test mode not supported");
+            } catch (HubtelPaymentException e) {
+                e.printStackTrace();
+            }
+        }
         this.mode = environment;
         return this;
     }
 
-    public SessionConfiguration build() throws MPowerPaymentException {
+    public SessionConfiguration build() throws HubtelPaymentException {
         if (mode != Environment.TEST_MODE && mode != Environment.LIVE_MODE) {
-            throw new MPowerPaymentException("Invalid payment environment.");
+            throw new HubtelPaymentException("Invalid payment environment.");
         }
 
         if (clientid.trim().length() == 0) {
-            throw new MPowerPaymentException("Client Id is not set.");
+            throw new HubtelPaymentException("Client Id is not set.");
         }
 
         if (secretkey.trim().length() == 0) {
-            throw new MPowerPaymentException("Secret Key is not set.");
+            throw new HubtelPaymentException("Secret Key is not set.");
         }
 
         if (mode == Environment.TEST_MODE) {
@@ -110,7 +122,7 @@ public class SessionConfiguration {
             Pattern p = Pattern.compile("(@)?(href=')?(HREF=')?(HREF=\")?(href=\")?(http://)?[a-zA-Z_0-9\\-]+(\\.\\w[a-zA-Z_0-9\\-]+)+(/[#&\\n\\-=?\\+\\%/\\.\\w]+)?");
             Matcher m = p.matcher(this.endpointurl);
             if (!m.matches()) {
-                throw new MPowerPaymentException("invalid endpoint url.");
+                throw new HubtelPaymentException("invalid endpoint url.");
             }
         }
 

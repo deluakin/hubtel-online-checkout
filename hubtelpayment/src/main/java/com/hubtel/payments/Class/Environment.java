@@ -1,4 +1,4 @@
-package com.smsgh.hubtelpayment.Class;
+package com.hubtel.payments.Class;
 
 /**
  * Created by DELU on 2/6/2017.

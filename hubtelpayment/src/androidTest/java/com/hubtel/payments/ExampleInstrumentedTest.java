@@ -1,4 +1,4 @@
-package com.smsgh.hubtelpayment;
+package com.hubtel.payments;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

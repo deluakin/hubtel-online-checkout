@@ -1,4 +1,4 @@
-package com.akindelu.hubtelpayment;
+package com.akindelu.example;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.smsgh.hubtelpayment;
+package com.akindelu.example;
 
 import org.junit.Test;
 

@@ -1,10 +1,10 @@
-package com.smsgh.hubtelpayment.Class;
+package com.hubtel.payments.Class;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
-import com.smsgh.hubtelpayment.Interfaces.HttpDoneListener;
+import com.hubtel.payments.Interfaces.HttpDoneListener;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
