@@ -1,6 +1,6 @@
 # Description
 __Hubtel Payment__ android library allows you to easily integrate payment gateway into your android app and start accepting payments from within your android app.
-The gateway supports Mobile Wallets(MTN, Airtel, Tigo, Vodafone) & Bank Cards payment. To signup for a merchant account visit https://unity.hubtel.com/account/signup. 
+Hubtel Payment supports Mobile Wallets(MTN, Airtel, Tigo, Vodafone) & Bank Cards payment. You'll need to signup for a merchant account, visit https://unity.hubtel.com/account/signup. 
 
 
 # Download
@@ -21,7 +21,7 @@ Add it in your build.gradle(Module)
 ```java
 dependencies {
 	...
-	compile 'com.github.deluakin:Hubtel-Payment-Android:v1.0'
+	compile 'com.github.deluakin:hubtel-payment:v1.2'
 }
 ```
 
@@ -39,8 +39,8 @@ __Add a dependency using Maven:__
 ```java
 <dependency>
 	<groupId>com.github.deluakin</groupId>
-	<artifactId>>Hubtel-Payment-Android</artifactId>
-	<version>v1.0</version>
+	<artifactId>hubtel-payment</artifactId>
+	<version>v1.2</version>
 </dependency>
 ```
 
@@ -50,21 +50,20 @@ Simple use case will look something like this:
 ```java
 try {
 	SessionConfiguration sessionConfiguration = new SessionConfiguration()
-		.Builder().setMasterKey("YOUR_MASTERKEY")
-		.setPrivateKey("YOUR_PRIVATEKEY")
-		.setToken("YOUR_TOKEN")
-		.setEnvironment(Environment.TEST_MODE)
+		.Builder().setClientId("CLIENT-ID")
+		.setSecretKey("SECRET-KEY")
+		.setEnvironment(Environment.LIVE_MODE)
 		.build();
-	MpowerPayments mpowerPayments = new MpowerPayments(sessionConfiguration);
-	mpowerPayments.setPaymentDetails(10, "This is a demo payment");
-	mpowerPayments.Pay(this);
-	mpowerPayments.setOnPaymentCallback(new OnPaymentResponse() {
+	HubtelCheckout hubtelPayments = new HubtelCheckout(sessionConfiguration);
+	hubtelPayments.setPaymentDetails(1.5, "This is a demo payment");
+	hubtelPayments.Pay(this);
+	hubtelPayments.setOnPaymentCallback(new OnPaymentResponse() {
 		@Override
 		public void onFailed(String token, String reason) {
 		}
 
 		@Override
-		public void onCancelled(String token) {
+		public void onCancelled() {
 		}
 
 		@Override
@@ -72,7 +71,7 @@ try {
 		}
 	});
 }
-catch (MPowerPaymentException e) {
+catch (HubtelPaymentException e) {
 	e.printStackTrace();
 }
 ```
@@ -80,7 +79,7 @@ catch (MPowerPaymentException e) {
 
 # Note
 You can set an endpoint url which the payment status and token can be posted(GET) to after payment has been completed.
-Hutel will append "?token=INVOICE_TOKEN&status=PAYMENT_STATUS" to your URL. 
+Hubtel will append "?token=INVOICE_TOKEN&status=PAYMENT_STATUS" to your URL. 
 The __status__ would either be pending, cancelled or completed depending on whether or not the customer has made payment for the transaction.
 
 ```java
