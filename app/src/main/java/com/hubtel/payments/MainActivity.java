@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancelled(String token) {
+                public void onCancelled() {
                     paymentstatus.setText("payment was cancelled.");
                 }
 

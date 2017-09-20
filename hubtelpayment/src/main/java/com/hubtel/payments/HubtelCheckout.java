@@ -173,7 +173,7 @@ public class HubtelCheckout {
                         }
                         break;
                     case "cancelled ":
-                        UserCancelledTransaction(token);
+                        UserCancelledTransaction();
                         break;
                     case "pending":
                         String response_text = jsonObject.get("response_text").toString();
@@ -260,8 +260,8 @@ public class HubtelCheckout {
         }
     }
 
-    private void UserCancelledTransaction(String token){
-        this.paymentResponse.onCancelled(token);
+    private void UserCancelledTransaction(){
+        this.paymentResponse.onCancelled();
     }
 
     private String getQueryStringPart(String key, String str_url) throws HubtelPaymentException {
@@ -332,7 +332,7 @@ public class HubtelCheckout {
                                 if(web_url.contains("mpower_cancel.php?token")) {
                                     token = getQueryStringPart("token", web_url);
                                 }
-                                UserCancelledTransaction(token);
+                                UserCancelledTransaction();
                             } catch (HubtelPaymentException e) {
                                 e.printStackTrace();
                             }

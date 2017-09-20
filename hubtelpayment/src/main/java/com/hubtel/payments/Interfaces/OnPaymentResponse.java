@@ -7,6 +7,6 @@ package com.hubtel.payments.Interfaces;
 
 public interface OnPaymentResponse {
     void onFailed(String token, String reason);
-    void onCancelled(String token);
+    void onCancelled();
     void onSuccessful(String token);
 }
