@@ -21,7 +21,7 @@ Add it in your build.gradle(Module)
 ```java
 dependencies {
 	...
-	compile 'com.github.deluakin:hubtel-payment:v1.2'
+	compile 'com.github.deluakin:hubtel-payment:v1.3'
 }
 ```
 
