@@ -154,7 +154,9 @@ public class HubtelCheckout {
 
     private void CompletePaymentStatusCheck(String message, String token) throws HubtelPaymentException {
         try {
-            d.dismiss();
+            if(d != null){
+                d.dismiss();
+            }
             JSONObject jsonObject = new JSONObject(message);
             if(jsonObject.get("response_code") != null && jsonObject.get("response_code").toString().equalsIgnoreCase("00")){
                 String status = jsonObject.get("status").toString();
@@ -183,7 +185,7 @@ public class HubtelCheckout {
                         break;
                 }
             }else{
-
+                paymentResponse.onFailed(token, "");
             }
         }catch (Exception ex){
             throw new HubtelPaymentException(ex.getMessage());
@@ -220,6 +222,7 @@ public class HubtelCheckout {
             jparent.put("store", jobject);
 
             jobject = new JSONObject();
+            http://www.blank.com/
             jobject.put("return_url", "http://txtconnect.co/v2/app/mpower_continue.php");
             jobject.put("cancel_url", "http://txtconnect.co/v2/app/mpower_cancel.php");
             jparent.put("actions", jobject);
@@ -261,6 +264,9 @@ public class HubtelCheckout {
     }
 
     private void UserCancelledTransaction(){
+        if(d != null){
+            d.dismiss();
+        }
         this.paymentResponse.onCancelled();
     }
 
@@ -293,11 +299,11 @@ public class HubtelCheckout {
             JSONObject jsonObject = new JSONObject(message);
             if(jsonObject.get("response_code") != null && jsonObject.get("response_code").toString().equalsIgnoreCase("00")){
                 String url = jsonObject.get("response_text").toString();
-                WebView webview = (WebView) d.findViewById(R.id.mpower_browser);
+                final WebView webview = (WebView) d.findViewById(R.id.mpower_browser);
                 webview.setWebChromeClient(new WebChromeClient());
                 webview.getSettings().setJavaScriptEnabled(true);
                 webview.getSettings().setDomStorageEnabled(true);
-                txtloading.setText("Loading...");
+                //txtloading.setText("Loading...");
 
                 webview.setWebChromeClient(new WebChromeClient() {
                     public void onProgressChanged(WebView view, int progress) {
@@ -308,8 +314,7 @@ public class HubtelCheckout {
                             }
                             done = true;
                             view.stopLoading();
-                            d.cancel();
-                            d.dismiss();
+                            webview.setVisibility(View.GONE);
                             txtloading.setText("Completing payment...");
                             try {
                                 String token = getQueryStringPart("token", web_url);
@@ -324,8 +329,7 @@ public class HubtelCheckout {
                             }
                             done = true;
                             view.stopLoading();
-                            d.cancel();
-                            d.dismiss();
+                            webview.setVisibility(View.GONE);
                             txtloading.setText("Cancelling payment...");
                             try {
                                 String token = "";
@@ -339,12 +343,12 @@ public class HubtelCheckout {
                             return;
                         }
 
-                        if(progress >= 30 && progress < 95) {
-                            txtloading.setText("Almost ready...");
-                        } else if(progress >= 95) {
+                        if(progress >= 95) {
+                            webview.setVisibility(View.VISIBLE);
                             d.findViewById(R.id.processing).setVisibility(View.GONE);
                             txtloading.setText("Processing...");
                         }else{
+                            webview.setVisibility(View.GONE);
                             d.findViewById(R.id.processing).setVisibility(View.VISIBLE);
                         }
                     }
