@@ -103,8 +103,8 @@ SessionConfiguration sessionConfiguration = new SessionConfiguration()
 
 
 ## FAQ
-### How do i get a merchant account?  
+### How do i get a merchant account?
 Visit https://unity.hubtel.com/account/signup to create one
 
-### How do i get a Client Id and Secret Key?  
+### How do i get a Client Id and Secret Key?
 You will need to register an App. To do that, go to this url https://unity.hubtel.com/account/api-accounts-add. Make sure the "API TYPE" selected is "HTTP REST API". After registering an App, Hubtel will automatically generate a Client ID and a Client Secret.
