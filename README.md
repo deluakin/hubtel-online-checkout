@@ -44,7 +44,7 @@ __Add a dependency using Maven:__
 </dependency>
 ```
 
-## How do I use this library
+## Usage
 Simple use case will look something like this:
 
 ```java
