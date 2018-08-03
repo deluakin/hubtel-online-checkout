@@ -35,10 +35,10 @@ public class HubtelCheckout {
     private String description = "";
     private SessionConfiguration config;
     private List<PaymentItem> paymentItemList = new ArrayList<>();
-    Context context;
-    OnPaymentResponse paymentResponse;
-    Dialog d;
-    TextView txtloading;
+    private Context context;
+    private OnPaymentResponse paymentResponse;
+    private Dialog d;
+    private TextView txtloading;
     boolean done = false;
     boolean paymentpageloaded = false;
 
