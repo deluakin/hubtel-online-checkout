@@ -3,6 +3,7 @@ package com.hubtel.payments;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -11,13 +12,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.hubtel.payments.Class.Environment;
 import com.hubtel.payments.Class.HTTPRequest;
 import com.hubtel.payments.Exception.HubtelPaymentException;
 import com.hubtel.payments.Class.PaymentItem;
 import com.hubtel.payments.Interfaces.HttpDoneListener;
 import com.hubtel.payments.Interfaces.OnPaymentResponse;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URI;
@@ -82,10 +83,6 @@ public class HubtelCheckout {
      */
     public void Pay(Context context) throws HubtelPaymentException {
         this.context = context;
-
-        if(config.getEnvironment() == Environment.TEST_MODE){
-            throw new HubtelPaymentException("Test environment is not supported, switch to LIVE_MODE.");
-        }
 
         if(config.posturl.trim().length() == 0){
             throw new HubtelPaymentException("Make sure the build() method of the SessionConfiguration class is called");
@@ -158,30 +155,27 @@ public class HubtelCheckout {
                 d.dismiss();
             }
             JSONObject jsonObject = new JSONObject(message);
-            if(jsonObject.get("response_code") != null && jsonObject.get("response_code").toString().equalsIgnoreCase("00")){
-                String status = jsonObject.get("status").toString();
+            if(jsonObject.get("ResponseCode") != null && jsonObject.get("ResponseCode").toString().equalsIgnoreCase("0000")){
+                JSONArray dataArr = (JSONArray) jsonObject.get("Data");
+                JSONObject data = (JSONObject) dataArr.get(0);
+                JSONArray transCycle = (JSONArray) data.get("TransactionCycle");
+                JSONObject mostRecent = (JSONObject) transCycle.get(0);
+                String status = mostRecent.getString("Status");
                 String endpointurl = config.getEndPointurl();
+                String clientRef = data.get("ClientReference").toString();
                 if(endpointurl != null && endpointurl.trim().length() > 0){
                     String param = (endpointurl.indexOf("?") > 0) ? "" : "?";
-                    param += "&status=" + status + "&token=" + token + "&tranxid=" + config.hash;
+                    param += "&status=" + status + "&token=" + token + "&tranxid=" + clientRef;
                     endpointurl = endpointurl + param;
                     SendResponseToEndPoint(endpointurl);
                 }
                 switch (status){
-                    case "completed":
-                        JSONObject custom_data = new JSONObject(jsonObject.get("custom_data").toString());
-                        if(config.hash.equalsIgnoreCase(custom_data.get("tranx_id").toString())) {
-                            paymentResponse.onSuccessful(token);
-                        }
-                        break;
-                    case "cancelled ":
-                        UserCancelledTransaction();
-                        break;
-                    case "pending":
-                        String response_text = jsonObject.get("response_text").toString();
-                        paymentResponse.onFailed(token, response_text);
+                    case "Success":
+                        paymentResponse.onSuccessful(token);
                         break;
                     default:
+                        String response_text = jsonObject.get("response_text").toString();
+                        paymentResponse.onFailed(token, response_text);
                         break;
                 }
             }else{
@@ -196,42 +190,40 @@ public class HubtelCheckout {
         String data = "";
         try {
             JSONObject jparent = new JSONObject();
-            JSONObject jobject = new JSONObject();
+            JSONObject cart = new JSONObject();
+            JSONArray items = new JSONArray();
             if(this.paymentItemList.size() > 0){
-                int x = 0;
-                JSONObject p_obj2 = new JSONObject();
                 for(PaymentItem p : this.paymentItemList){
-                    JSONObject p_obj = new JSONObject();
-                    p_obj.put("name", p.name);
-                    p_obj.put("quantity", p.qty);
-                    p_obj.put("unit_price", p.unit_p);
-                    p_obj.put("total_price", p.total_p);
-                    p_obj.put("description", p.description);
-                    p_obj2.put("item_" + x, p_obj);
-                    x++;
+                    JSONObject item = new JSONObject();
+                    item.put("name", p.name);
+                    item.put("quantity", p.qty);
+                    item.put("unitPrice", p.unit_p);
+
+                    items.put(item);
                 }
-                jobject.put("items", p_obj2);
+                cart.put("items", items);
+            }else{
+                JSONObject item = new JSONObject();
+                item.put("name", description);
+                item.put("quantity", 1);
+                item.put("unitPrice", amount);
+
+                items.put(item);
+                cart.put("items", items);
             }
 
-            jobject.put("total_amount", this.amount);
-            jobject.put("description", this.description);
-            jparent.put("invoice", jobject);
+            cart.put("totalAmount", this.amount);
+            cart.put("description", this.description);
 
-            jobject = new JSONObject();
-            jobject.put("name", getAppName());
-            jparent.put("store", jobject);
+            cart.put("callbackUrl", "https://apps.mobivs.com/invitasio/index.php/hubtel/" + getAppName());
+            cart.put("returnUrl", "https://apps.mobivs.com/mpower_continue");
+            cart.put("cancellationUrl", "https://apps.mobivs.com/mpower_cancel");
 
-            jobject = new JSONObject();
-            http://www.blank.com/
-            jobject.put("return_url", "http://txtconnect.co/v2/app/mpower_continue.php");
-            jobject.put("cancel_url", "http://txtconnect.co/v2/app/mpower_cancel.php");
-            jparent.put("actions", jobject);
+            cart.put("merchantBusinessLogoUrl", config.getBusinessLogoUrl());
+            cart.put("clientReference", config.getRef());
+            cart.put("merchantAccountNumber", config.getMerchantAccountNumber());
 
-            jobject = new JSONObject();
-            jobject.put("tranx_id", config.getHash());
-            jparent.put("custom_data", jobject);
-
-            data = jparent.toString();
+            data = cart.toString();
 
         }catch (Exception ex){
 
@@ -297,18 +289,18 @@ public class HubtelCheckout {
     private void ContinuePayment(String message) throws HubtelPaymentException {
         try{
             JSONObject jsonObject = new JSONObject(message);
-            if(jsonObject.get("response_code") != null && jsonObject.get("response_code").toString().equalsIgnoreCase("00")){
-                String url = jsonObject.get("response_text").toString();
+            if(jsonObject.get("status") != null && jsonObject.get("status").toString().equalsIgnoreCase("Success")){
+                JSONObject data = new JSONObject(jsonObject.get("data").toString());
+                String url = data.getString("checkoutUrl");
                 final WebView webview = (WebView) d.findViewById(R.id.mpower_browser);
                 webview.setWebChromeClient(new WebChromeClient());
                 webview.getSettings().setJavaScriptEnabled(true);
                 webview.getSettings().setDomStorageEnabled(true);
-                //txtloading.setText("Loading...");
 
                 webview.setWebChromeClient(new WebChromeClient() {
                     public void onProgressChanged(WebView view, int progress) {
                         String web_url = view.getUrl();
-                        if(web_url.contains("mpower_continue.php?token")){
+                        if(web_url.contains("mpower_continue") && web_url.contains("checkoutid")){
                             if(done){
                                 return;
                             }
@@ -317,13 +309,13 @@ public class HubtelCheckout {
                             webview.setVisibility(View.GONE);
                             txtloading.setText("Completing payment...");
                             try {
-                                String token = getQueryStringPart("token", web_url);
+                                String token = getQueryStringPart("checkoutid", web_url);
                                 CompletePaymentTransaction(token);
                             } catch (HubtelPaymentException e) {
                                 e.printStackTrace();
                             }
                             return;
-                        }else if(web_url.contains("mpower_cancel.php")){
+                        }else if(web_url.contains("mpower_cancel")){
                             if(done){
                                 return;
                             }
@@ -332,10 +324,7 @@ public class HubtelCheckout {
                             webview.setVisibility(View.GONE);
                             txtloading.setText("Cancelling payment...");
                             try {
-                                String token = "";
-                                if(web_url.contains("mpower_cancel.php?token")) {
-                                    token = getQueryStringPart("token", web_url);
-                                }
+                                String token = getQueryStringPart("checkoutid", web_url);
                                 UserCancelledTransaction();
                             } catch (HubtelPaymentException e) {
                                 e.printStackTrace();
@@ -366,7 +355,7 @@ public class HubtelCheckout {
                 webview.loadUrl(url);
             }else{
                 d.dismiss();
-                throw new HubtelPaymentException(jsonObject.get("response_text").toString());
+                throw new HubtelPaymentException("Payment gateway could not be initialized");
             }
         }catch (Exception ex){
             d.dismiss();

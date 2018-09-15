@@ -8,6 +8,4 @@ public class PaymentItem {
     public String name = "";
     public String qty = "";
     public String unit_p = "";
-    public String total_p = "";
-    public String description = "";
 }

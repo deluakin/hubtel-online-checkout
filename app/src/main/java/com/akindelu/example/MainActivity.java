@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.hubtel.payments.Class.Environment;
 import com.hubtel.payments.Exception.HubtelPaymentException;
 import com.hubtel.payments.Interfaces.OnPaymentResponse;
 import com.hubtel.payments.HubtelCheckout;
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             SessionConfiguration sessionConfiguration = new SessionConfiguration()
                     .Builder().setClientId("igeirlub")
                     .setSecretKey("jjksrpzl")
-                    .setEnvironment(Environment.LIVE_MODE)
+                    .setMerchantAccountNumber("HM0805170001")
                     .build();
             HubtelCheckout hubtelPayments = new HubtelCheckout(sessionConfiguration);
             hubtelPayments.setPaymentDetails(0.1, "This is a demo payment");
