@@ -18,7 +18,7 @@ allprojects {
 ```java
 dependencies {
 	...
-	implementation 'com.github.deluakin:hubtel-payment:v1.4'
+	implementation 'com.github.deluakin:hubtel-online-checkout:v1.4'
 }
 ```
 
@@ -36,7 +36,7 @@ __Add a dependency using Maven:__
 ```java
 <dependency>
 	<groupId>com.github.deluakin</groupId>
-	<artifactId>hubtel-payment</artifactId>
+	<artifactId>hubtel-online-checkout</artifactId>
 	<version>v1.4</version>
 </dependency>
 ```
