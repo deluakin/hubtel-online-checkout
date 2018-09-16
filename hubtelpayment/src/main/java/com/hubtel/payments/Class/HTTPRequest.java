@@ -7,6 +7,7 @@ import android.util.Log;
 import com.hubtel.payments.Interfaces.HttpDoneListener;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -23,7 +24,7 @@ public class HTTPRequest extends AsyncTask<Object, String, String> {
 	public HTTPRequest(Context parent, HttpDoneListener httpDoneListener) {
 		super();
 		this.httpDoneListener = httpDoneListener;
-		this.mParent=parent;
+		this.mParent = parent;
 	}
 	
 	@Override
@@ -67,7 +68,8 @@ public class HTTPRequest extends AsyncTask<Object, String, String> {
 			}
 
 			responseCode = urlConnection.getResponseCode();
-			BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+			InputStream istream = urlConnection.getInputStream();
+			BufferedReader in = new BufferedReader(new InputStreamReader(istream));
 			String inputLine;
 			StringBuffer response = new StringBuffer();
 			while ((inputLine = in.readLine()) != null) {
