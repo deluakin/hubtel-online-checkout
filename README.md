@@ -1,3 +1,9 @@
+[![GitHub issues](https://img.shields.io/github/issues/deluakin/hubtel-online-checkout.svg)](https://github.com/deluakin/hubtel-online-checkout/issues)
+[![GitHub forks](https://img.shields.io/github/forks/deluakin/hubtel-online-checkout.svg)](https://github.com/deluakin/hubtel-online-checkout/network)
+[![GitHub stars](https://img.shields.io/github/stars/deluakin/hubtel-online-checkout.svg)](https://github.com/deluakin/hubtel-online-checkout/stargazers)
+[![GitHub license](https://img.shields.io/github/license/deluakin/hubtel-online-checkout.svg)](https://github.com/deluakin/hubtel-online-checkout/blob/master/LICENSE)
+
+
 ## Description
 This android library allows you to easily integrate hubtel online checkout into your android app and start accepting payments from within your app.
 Hubtel Payment supports Mobile Wallets & Bank Cards payment. You'll need to signup for a [hubtel merchant account](https://unity.hubtel.com/account/signup), also you will need a ClientID and a Secret Key https://unity.hubtel.com/account/api-accounts-add.
