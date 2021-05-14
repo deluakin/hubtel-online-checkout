@@ -6,7 +6,7 @@
 
 ## Description
 This android library allows you to easily integrate hubtel online checkout into your android app and start accepting payments from within your app.
-Hubtel Payment supports Mobile Wallets & Bank Cards payment. You'll need to signup for a [hubtel merchant account](https://unity.hubtel.com/account/signup), also you will need a ClientID and a Secret Key https://unity.hubtel.com/account/api-accounts-add.
+Hubtel Payment supports Mobile Wallets & Bank Cards payment. You'll need to [signup](https://hubtel.com) for a merchant account.
 
 
 ## Download
@@ -78,12 +78,3 @@ catch (HubtelPaymentException e) {
 	e.printStackTrace();
 }
 ```
-
-
-
-## FAQ
-__How do i get a hubtel merchant account?__
-Visit https://unity.hubtel.com/account/signup to create one
-
-__How do i get a Client Id and Secret Key?__
-You will need to register an App. To do that, go to this url https://unity.hubtel.com/account/api-accounts-add. Make sure the "API TYPE" selected is "HTTP REST API". After registering an App, Hubtel will automatically generate a Client ID and a Client Secret.
